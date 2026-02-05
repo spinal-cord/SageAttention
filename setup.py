@@ -22,6 +22,15 @@ import warnings
 from packaging.version import parse, Version
 
 from setuptools import setup, find_packages
+from setuptools.command.bdist_wheel import bdist_wheel
+
+class PlatformBDistWheel(bdist_wheel):
+    def get_tag(self):
+        python, abi, plat = super().get_tag()
+        # Force Linux x86_64 platform
+        return (python, abi, 'manylinux_2_17_x86_64')
+
+cmdclass = {}
 
 # Skip CUDA build in CI or when explicitly requested
 SKIP_CUDA_BUILD = (
@@ -268,6 +277,7 @@ if not SKIP_CUDA_BUILD:
             return objects
 
     cmdclass = {"build_ext": BuildExtensionSeparateDir} if ext_modules else {}
+cmdclass["bdist_wheel"] = PlatformBDistWheel
 
 setup(
     name='sageattention',
