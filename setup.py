@@ -28,7 +28,7 @@ class PlatformBDistWheel(bdist_wheel):
     def get_tag(self):
         python, abi, plat = super().get_tag()
         # Force Linux x86_64 platform
-        return (python, abi, 'manylinux_2_17_x86_64')
+        return (python, abi, 'linux_x86_64')
 
 cmdclass = {}
 
