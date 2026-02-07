@@ -9,6 +9,20 @@ from wheel.bdist_wheel import bdist_wheel as _bdist_wheel
 import torch
 from torch.utils.cpp_extension import BuildExtension, CppExtension, CUDAExtension, CUDA_HOME
 
+class PlatformBDistWheel(bdist_wheel):
+    def get_tag(self):
+        python, abi, plat = super().get_tag()
+        # Force Linux x86_64 platform
+        return (python, abi, 'linux_x86_64')
+
+cmdclass = {}
+
+# Skip CUDA build in CI or when explicitly requested
+SKIP_CUDA_BUILD = (
+    os.getenv("SAGEATTN_SKIP_CUDA_BUILD", "0").upper() in {"1", "TRUE", "YES"}
+    or ("sdist" in sys.argv)
+)
+
 this_dir = os.path.dirname(os.path.abspath(__file__))
 
 PACKAGE_NAME = "sageattn3"
