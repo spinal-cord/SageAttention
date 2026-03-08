@@ -9,7 +9,7 @@ from wheel.bdist_wheel import bdist_wheel as _bdist_wheel
 import torch
 from torch.utils.cpp_extension import BuildExtension, CppExtension, CUDAExtension, CUDA_HOME
 
-class PlatformBDistWheel(bdist_wheel):
+class PlatformBDistWheel(_bdist_wheel):
     def get_tag(self):
         python, abi, plat = super().get_tag()
         # Force Linux x86_64 platform
